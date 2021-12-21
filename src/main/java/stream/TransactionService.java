@@ -4,6 +4,7 @@ import domain.Transaction;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TransactionService {
@@ -25,9 +26,20 @@ public class TransactionService {
     }
 
     //Какова максимальная сумма среди всех транзакций?
-    public int findMaxTransactionValue(List<Transaction> transactions) {
+    public Optional<Integer> findMaxTransactionValue(List<Transaction> transactions) {
         return transactions.stream()
                 .map(Transaction::getValue)
-                .reduce(0, Integer::max);
+                .reduce(Integer::max);
+//        return transactions.stream()
+//                .map(Transaction::getValue)
+//                .max(Comparator.naturalOrder());
+    }
+
+    //Найти транзакцию с минимальной суммой
+    public Optional<Transaction> findTransactionWithMinValue(List<Transaction> transactions) {
+        return transactions.stream()
+                .reduce((t1, t2) -> t1.getValue() > t2.getValue() ? t2 : t1);
+//        return transactions.stream()
+//                .min(Comparator.comparing(Transaction::getValue));
     }
 }

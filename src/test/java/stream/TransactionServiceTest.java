@@ -65,7 +65,14 @@ class TransactionServiceTest {
     @Test
     public void findMaxTransactionValue_test() {
         int exceptedResult = 1000;
-        int result = transactionService.findMaxTransactionValue(transactions);
-        assertEquals(exceptedResult, result);
+        transactionService.findMaxTransactionValue(transactions)
+                .ifPresent(result -> assertEquals(exceptedResult, result));
+    }
+
+    @Test
+    void findTransactionWithMinValue_test() {
+        Transaction exceptedResult = transactions.get(1);
+        transactionService.findTransactionWithMinValue(transactions)
+                .ifPresent(transaction -> assertEquals(exceptedResult, transaction));
     }
 }
