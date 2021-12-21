@@ -1,14 +1,13 @@
 package stream;
 
 import domain.Dish;
-import domain.Menu;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Этот клас является информационным! Т.е. здесь, в основном, подсказки
+ */
 public class StreamApiService {
 
     public List<String> findThreeHignCaloricDishName(List<Dish> menu) {
@@ -107,5 +106,65 @@ public class StreamApiService {
                 .filter(dish -> dish.getCalories() > 300)
                 .skip(2)
                 .collect(Collectors.toList());
+    }
+
+    //найти квадраты передаваемых чисел
+    public List<Integer> findSquares(List<Integer> numbers) {
+        return numbers.stream()
+                .map(number -> number * number)
+                .collect(Collectors.toList());
+    }
+
+    //По двум заданным спискам вернуть всех их попарные сочетания, которые делятся на 3 без остатка
+    public List<int[]> findPairs(List<Integer> numbers1, List<Integer> numbers2) {
+        return numbers1.stream()
+                .flatMap(i -> numbers2.stream()
+                        .filter(j -> (i + j) % 3 == 0)
+                        .map(j -> new int[] {i, j}))
+                .collect(Collectors.toList());
+    }
+
+    //Найти уникальные символы
+    public List<String> findUniqueChars(List<String> words) {
+        return words.stream()
+                .map(word -> word.split(""))
+                .flatMap(Arrays::stream)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * anyMatch служит для ответа на вопрос: "удовлетворяет ли заданному предикату хотя бы один элемент из потока данных?"
+     * является завершающей операцией
+     */
+    public boolean isMenuVegetarian(List<Dish> menu) {
+        return menu.stream()
+                .anyMatch(Dish::isVegetarian);
+    }
+
+    /**
+     * allMatch работает аналогично anyMatch, но проверяет, удовлетворяют ли заданному предикату все элементы потока данных
+     *
+     * противоположностью allMatch является метод noneMatch
+     * он проверяет, точно ли ни один элемент из списка не соответствует заданному условию
+     */
+    public boolean isHealthy(List<Dish> menu) {
+        return menu.stream()
+                .allMatch(dish -> dish.getCalories() < 1000);
+    }
+
+    /**
+     * reduce служит последовательного вычисления
+     * например, для последовательного сложения или умножения
+     * или для вычисления максимального или минимального элемента
+     */
+    public int findSum(List<Integer> numbers) {
+        return numbers.stream()
+                .reduce(0, (a, b) -> a + b);
+    }
+
+    public int findMax(List<Integer> numbers) {
+        return numbers.stream()
+                .reduce(0, Integer::max);
     }
 }

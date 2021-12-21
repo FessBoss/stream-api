@@ -79,4 +79,23 @@ class StreamApiServiceTest {
         assertEquals(530, dishes.get(3));
         assertEquals(550, dishes.get(4));
     }
+
+    @Test
+    public void testFindPairs() {
+        List<Integer> numbers1 = List.of(1, 2, 3);
+        List<Integer> numbers2 = List.of(3, 4);
+        List<int[]> exceptedResult = List.of(
+                new int[] {2, 4},
+                new int[] {3, 3}
+        );
+
+        List<int[]> result = streamApiService.findPairs(numbers1, numbers2);
+        for (int i = 0; i < exceptedResult.size(); i++) {
+            int[] pair1 = exceptedResult.get(i);
+            int[] pair2 = result.get(i);
+            for (int j = 0; j < pair1.length; j++) {
+                assertEquals(pair1[j], pair2[j]);
+            }
+        }
+    }
 }
