@@ -15,4 +15,12 @@ public class TransactionService {
                 .sorted(Comparator.comparingInt(Transaction::getValue))
                 .collect(Collectors.toList());
     }
+
+    //Вывести суммы всех транзакций трейдеров из Кембриджа
+    public List<Integer> findTraderFromCambridgeTransactionValue(List<Transaction> transactions) {
+        return transactions.stream()
+                .filter(transaction -> "Cambridge".equals(transaction.getTrader().getCity()))
+                .map(Transaction::getValue)
+                .collect(Collectors.toList());
+    }
 }

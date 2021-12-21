@@ -51,4 +51,14 @@ class TransactionServiceTest {
             assertEquals(exceptedResult.get(i), result.get(i));
         }
     }
+
+    @Test
+    public void findTraderFromCambridgeTransactionValue_test() {
+        List<Integer> exceptedResult = List.of(400, 300, 1000, 950);
+        List<Integer> result = transactionService.findTraderFromCambridgeTransactionValue(transactions);
+
+        for (int i = 0; i < exceptedResult.size(); i++) {
+            assertEquals(exceptedResult.get(i), result.get(i));
+        }
+    }
 }
