@@ -43,7 +43,7 @@ class TransactionServiceTest {
     }
 
     @Test
-    void findSortedTransactionBy2011Year() {
+    public void findSortedTransactionBy2011Year_test() {
         List<Transaction> result = transactionService.findSortedTransactionBy2011Year(transactions);
         List<Transaction> exceptedResult = List.of(transactions.get(1), transactions.get(0));
 

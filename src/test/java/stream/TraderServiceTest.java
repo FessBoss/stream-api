@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TraderServiceTest {
     private Trader raoul;
@@ -35,7 +36,7 @@ class TraderServiceTest {
     }
 
     @Test
-    void findUniqueTraderCities() {
+    public void findUniqueTraderCities_test() {
         List<String> exceptedResult = List.of("Cambridge", "Milan");
         List<String> result = traderService.findUniqueTraderCities(traders);
 
@@ -45,7 +46,7 @@ class TraderServiceTest {
     }
 
     @Test
-    void findTradersFromCambridgeSortedByName() {
+    public void findTradersFromCambridgeSortedByName_test() {
         List<Trader> exceptedResult = List.of(alan, brian, raoul);
         List<Trader> result = traderService.findTradersFromCambridgeSortedByName(traders);
 
@@ -55,10 +56,16 @@ class TraderServiceTest {
     }
 
     @Test
-    void findLineOfSortedTraderName() {
+    public void findLineOfSortedTraderName_test() {
         String exceptedResult = "Alan Brian Mario Raoul";
         String result = traderService.findLineOfSortedTraderName(traders);
 
         assertEquals(exceptedResult, result);
+    }
+
+    @Test
+    public void haveTraderFromMilan_test() {
+        boolean result = traderService.haveTraderFromMilan(traders);
+        assertTrue(result);
     }
 }

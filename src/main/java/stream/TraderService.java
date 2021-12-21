@@ -34,4 +34,10 @@ public class TraderService {
                 .forEach(name -> stringBuilder.append(name).append(" "));
         return stringBuilder.toString().trim();
     }
+
+    //Выяснить, существует ли хоть один трейдер из Милана
+    public boolean haveTraderFromMilan(List<Trader> traders) {
+        return traders.stream()
+                .anyMatch(trader -> "Milan".equals(trader.getCity()));
+    }
 }
