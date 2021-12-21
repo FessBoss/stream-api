@@ -23,4 +23,15 @@ public class TraderService {
                 .sorted(Comparator.comparing(Trader::getName))
                 .collect(Collectors.toList());
     }
+
+    //Вернуть строку со всеми именами трейдеров, отсортированными в алфавитном порядке
+    public String findLineOfSortedTraderName(List<Trader> traders) {
+        StringBuilder stringBuilder = new StringBuilder();
+        traders.stream()
+                .sorted(Comparator.comparing(Trader::getName))
+                .map(Trader::getName)
+                .distinct()
+                .forEach(name -> stringBuilder.append(name).append(" "));
+        return stringBuilder.toString().trim();
+    }
 }

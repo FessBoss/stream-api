@@ -53,4 +53,12 @@ class TraderServiceTest {
             assertEquals(exceptedResult.get(i), result.get(i));
         }
     }
+
+    @Test
+    void findLineOfSortedTraderName() {
+        String exceptedResult = "Alan Brian Mario Raoul";
+        String result = traderService.findLineOfSortedTraderName(traders);
+
+        assertEquals(exceptedResult, result);
+    }
 }
