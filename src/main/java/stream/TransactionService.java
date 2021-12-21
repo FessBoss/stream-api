@@ -23,4 +23,11 @@ public class TransactionService {
                 .map(Transaction::getValue)
                 .collect(Collectors.toList());
     }
+
+    //Какова максимальная сумма среди всех транзакций?
+    public int findMaxTransactionValue(List<Transaction> transactions) {
+        return transactions.stream()
+                .map(Transaction::getValue)
+                .reduce(0, Integer::max);
+    }
 }

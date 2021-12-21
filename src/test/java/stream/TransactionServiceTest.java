@@ -61,4 +61,11 @@ class TransactionServiceTest {
             assertEquals(exceptedResult.get(i), result.get(i));
         }
     }
+
+    @Test
+    public void findMaxTransactionValue_test() {
+        int exceptedResult = 1000;
+        int result = transactionService.findMaxTransactionValue(transactions);
+        assertEquals(exceptedResult, result);
+    }
 }
