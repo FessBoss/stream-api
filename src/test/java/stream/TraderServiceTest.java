@@ -43,4 +43,14 @@ class TraderServiceTest {
             assertEquals(exceptedResult.get(i), result.get(i));
         }
     }
+
+    @Test
+    void findTradersFromCambridgeSortedByName() {
+        List<Trader> exceptedResult = List.of(alan, brian, raoul);
+        List<Trader> result = traderService.findTradersFromCambridgeSortedByName(traders);
+
+        for (int i = 0; i < exceptedResult.size(); i++) {
+            assertEquals(exceptedResult.get(i), result.get(i));
+        }
+    }
 }
