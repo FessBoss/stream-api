@@ -4,6 +4,7 @@ import domain.Dish;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Этот клас является информационным! Т.е. здесь, в основном, подсказки
@@ -166,5 +167,28 @@ public class StreamApiService {
     public int findMax(List<Integer> numbers) {
         return numbers.stream()
                 .reduce(0, Integer::max);
+    }
+
+    /**
+     * Иногда проблема состоит в скрытых затратах на упаковку.
+     * Каждый объект Integer необходимо неявно распаковывать до простого типа данных, прежде чем прибавить к сумме.
+     *
+     * Для таких случаев есть версии потоков для примитивных типов данных.
+     * Кроме того, в них есть методы для обратного их преобразования в поток объектов (при необходимости)
+     */
+    public int findCaloriesSum(List<Dish> menu) {
+        return menu.stream()
+                .mapToInt(Dish::getCalories)
+                .sum();
+    }
+
+    /**
+     * Для работы с числовыми диапазонами в интерфейсах IntStream и LongStream используются методы range и rangeCLosed
+     * rangeClose включает границы диапазона, а range нет
+     */
+    public long evenNumbers(int range, int rangeClosed) {
+        return IntStream.rangeClosed(range, rangeClosed)
+                .filter(n -> n % 2 == 0)
+                .count();
     }
 }
