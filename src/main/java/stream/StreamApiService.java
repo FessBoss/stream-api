@@ -2,9 +2,14 @@ package stream;
 
 import domain.Dish;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Этот клас является информационным! Т.е. здесь, в основном, подсказки
@@ -190,5 +195,74 @@ public class StreamApiService {
         return IntStream.rangeClosed(range, rangeClosed)
                 .filter(n -> n % 2 == 0)
                 .count();
+    }
+
+    /**
+     * Потоки данных можно создавать на основе явно указанных значений с помощью статического метода Stream.of
+     * Для создания пустого потока используется метод Stream.empty()
+     */
+    public void wordsToUpperCase() {
+        Stream.of("Modern ", "Java ", "In ", "Action")
+                .map(String::toUpperCase)
+                .forEach(System.out::println);
+    }
+
+    /**
+     * Создание потока данных из объекта, допускающего неопределенное значение
+     * При работе с потоками данных можно столкнуться с ситуацией, когда извлеченный объект (возможно, с неопределенным
+     * значением) нужно преобразовать в поток данных (или пустой поток в случае объекта с неопределенным значением)
+     */
+    public void getProperty() {
+        Stream<String> values = Stream.of("config", "home", "user")
+                .flatMap(key -> Stream.ofNullable(System.getProperty(key)));
+    }
+
+    /**
+     * Создание потоков данных из массивов
+     *
+     * Поток данных можно создать на основе массива, с помощью статического метода Arrays.stream,
+     * принимающего в качестве параметра массив
+     */
+    public int sum() {
+        int[] numbers = new int[]{1, 2, 3, 4, 5};
+        return Arrays.stream(numbers).sum();
+    }
+
+    /**
+     * Создание потоков данных из файлов
+     *
+     * API NIO (non-blocking I/O, неблокирующего ввода/вывода) языка Java, используемый для таких операций ввода/вывода,
+     * как обработка файлов, был расширен для того, чтобы использовать возможности Stream API.
+     */
+    public void readFile() {
+        long uniqueWords = 0;
+        try (Stream<String> lines = Files.lines(Paths.get("data.txt"), Charset.defaultCharset())) {
+            uniqueWords = lines
+                    .flatMap(line -> Arrays.stream(line.split(" ")))
+                    .distinct()
+                    .count();
+        } catch (IOException e) {
+            //обработка файла
+        }
+    }
+
+    /**
+     * Операция iterate является принципиально последовательной для бесконечного потока данных,
+     * поскольку результат зависит от предыдущего значения.
+     */
+    public void iterate() {
+        Stream.iterate(0, n -> n + 2)
+                .limit(10)
+                .forEach(System.out::println);
+    }
+
+    /**
+     * Подобно методу iterate , метод generate дает возможность генерировать бесконечный поток значений,
+     * вычисляемых по требованию. Но метод generate не применяет функцию последовательно к каждому сгенерированному значению.
+     */
+    public void generate() {
+        Stream.generate(Math::random)
+                .limit(5)
+                .forEach(System.out::println);
     }
 }
