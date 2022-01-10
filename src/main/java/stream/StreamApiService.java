@@ -265,4 +265,63 @@ public class StreamApiService {
                 .limit(5)
                 .forEach(System.out::println);
     }
+
+
+    /**
+     * количество блюд в меню с помощью коллектора, возвращаемого фабричным методом counting
+     */
+    public long howManyDishes(List<Dish> menu) {
+        return menu.stream().collect(Collectors.counting());
+    }
+
+    /**
+     * Для вычисления максимального или минимального значения в потоке данных можно использовать
+     * два коллектора — Collectors.maxBy и Collectors.minBy.
+     * Они принимают в качестве аргумента объект Comparator для сравнения элементов потока данных.
+     */
+
+    public Optional<Dish> mostCalorieDish(List<Dish> menu) {
+        return menu.stream().collect(Collectors.maxBy(Comparator.comparingInt(Dish::getCalories)));
+    }
+
+    /**
+     * В классе Collectors имеется специальный фабричный метод для суммирования:
+     * Collectors.summingInt. Он принимает на входе функцию, отображающую объект
+     * в суммируемое значение типа int, и возвращает коллектор, который при передаче
+     * обычному методу collect вычисляет нужные сводные показатели
+     */
+
+    public int totalCalories(List<Dish> menu) {
+        return menu.stream().collect(Collectors.summingInt(Dish::getCalories));
+    }
+
+    /**
+     * Но вычисление сводных показателей — это отнюдь не только суммирование.
+     * Метод Collectors.averagingInt вместе с его аналогами averagingLong и averagingDouble
+     * позволяет вычислить среднее значение набора числовых значений
+     */
+
+    public double avgCalories(List<Dish> menu) {
+        return menu.stream().collect(Collectors.averagingInt(Dish::getCalories));
+    }
+
+    /**
+     * Довольно часто, однако, бывает нужно извлечь два таких результата или
+     * более, причем за одну операцию. В этом случае можно воспользоваться коллектором,
+     * возвращаемым фабричным методом summarizingInt.
+     * Вся информация собирается этим коллектором в объект класса IntSummaryStatistics,
+     * из которого удобно получать результаты с помощью его методов-геттеров.
+     */
+    public IntSummaryStatistics menuStatistics(List<Dish> menu) {
+        return menu.stream().collect(Collectors.summarizingInt(Dish::getCalories));
+    }
+
+    /**
+     * Возвращаемый фабричным методом joining коллектор выполняет конкатенацию
+     * всех строк, получаемых в результате вызовов метода toString для каждого из объектов потока данных
+     */
+    public String shortMenu(List<Dish> menu) {
+//        return menu.stream().map(Dish::getName).collect(Collectors.joining());
+        return menu.stream().map(Dish::getName).collect(Collectors.joining(", "));
+    }
 }
