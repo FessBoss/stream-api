@@ -324,4 +324,18 @@ public class StreamApiService {
 //        return menu.stream().map(Dish::getName).collect(Collectors.joining());
         return menu.stream().map(Dish::getName).collect(Collectors.joining(", "));
     }
+
+    /**
+     * вычислить суммарное количество калорий в меню можно с помощью коллектора, созданного на основе метода reducing
+     */
+    public int reducingTotalCalories(List<Dish> menu) {
+        return menu.stream().collect(Collectors.reducing(0, Dish::getCalories, (i, j) -> i + j));
+    }
+
+    /**
+     * Аналогичным образом можно найти самое калорийное блюдо с помощью одноаргументной версии метода reducing
+     */
+    public Optional<Dish> reducingMostCalorieDish(List<Dish> menu) {
+        return menu.stream().collect(Collectors.reducing((d1, d2) -> d1.getCalories() > d2.getCalories() ? d1 : d2));
+    }
 }
