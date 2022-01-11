@@ -16,6 +16,8 @@ import java.util.stream.Stream;
  */
 public class StreamApiService {
 
+    public enum CaloricLevel { DIET, NORMAL, FAT }
+
     public List<String> findThreeHignCaloricDishName(List<Dish> menu) {
         return menu.stream()                              //создаем поток данных из объекта menu (источник данных)
                 .filter(dish -> dish.getCalories() > 300) //создаем конвейер операций: сначала отфильтровываем
@@ -337,5 +339,56 @@ public class StreamApiService {
      */
     public Optional<Dish> reducingMostCalorieDish(List<Dish> menu) {
         return menu.stream().collect(Collectors.reducing((d1, d2) -> d1.getCalories() > d2.getCalories() ? d1 : d2));
+    }
+
+    /**
+     * Группировка с помощью Collectors.groupingBy
+     */
+    public Map<Dish.Type, List<Dish>> dishesByType(List<Dish> menu) {
+        return menu.stream().collect(Collectors.groupingBy(Dish::getType));
+    }
+
+    /**
+     * Но ссылка на метод не всегда подходит в качестве функции классификации,
+     * ведь иногда простого извлечения свойств объекта для классификации недостаточно
+     */
+    public Map<CaloricLevel, List<Dish>> dishesByCaloricLevel(List<Dish> menu) {
+        return menu.stream().collect(Collectors.groupingBy(dish -> {
+            if (dish.getCalories() <= 400) return CaloricLevel.DIET;
+            else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
+            else return CaloricLevel.FAT;
+        }));
+    }
+
+    /**
+     * В классе Collectors есть перегруженный фабричный метод groupingBy, принимающий второй аргумент типа
+     * Collector наряду с обычной функцией классификации. Таким образом, появляется
+     * возможность перенести предикат фильтрации внутрь этого второго коллектора
+     */
+    public Map<Dish.Type, List<Dish>> caloricDishesByType(List<Dish> menu) {
+        return menu.stream().collect(Collectors.groupingBy(Dish::getType,
+                Collectors.filtering(dish -> dish.getCalories() > 500, Collectors.toList())));
+    }
+
+    /**
+     * Для каждого объекта Dish мы получаем List пометок.
+     * Поэтому аналогично изложенному в предыдущей главе нам нужно выполнить flatMap для схлопывания
+     * полученного двухуровневого списка в одноуровневый
+     */
+    public Map<Dish.Type, Set<String>> dishNamesByType(List<Dish> menu) {
+        Map<String, List<String>> dishTags = new HashMap<>();
+        dishTags.put("pork", Arrays.asList("greasy", "salty"));
+        dishTags.put("beef", Arrays.asList("salty", "roasted"));
+        dishTags.put("chicken", Arrays.asList("fried", "crisp"));
+        dishTags.put("french fries", Arrays.asList("greasy", "fried"));
+        dishTags.put("rice", Arrays.asList("light", "natural"));
+        dishTags.put("season fruit", Arrays.asList("fresh", "natural"));
+        dishTags.put("pizza", Arrays.asList("tasty", "salty"));
+        dishTags.put("prawns", Arrays.asList("tasty", "roasted"));
+        dishTags.put("salmon", Arrays.asList("delicious", "fresh"));
+
+        return menu.stream().collect(Collectors.groupingBy(Dish::getType,
+                Collectors.flatMapping(dish -> dishTags.get(dish.getName()).stream(),
+                        Collectors.toSet())));
     }
 }
