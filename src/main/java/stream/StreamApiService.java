@@ -440,4 +440,22 @@ public class StreamApiService {
                 }, Collectors.toSet()))
         );
     }
+
+    /**
+     * Секционирование — частный случай группировки, при котором в качестве функции
+     * классификации используется предикат, называемый секционирующей функцией
+     */
+    public Map<Boolean, List<Dish>> partitionedMenu(List<Dish> menu) {
+        return menu.stream().collect(Collectors.partitioningBy(Dish::isVegetarian));
+    }
+
+    public Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType(List<Dish> menu) {
+        return menu.stream().collect(Collectors.partitioningBy(Dish::isVegetarian, Collectors.groupingBy(Dish::getType)));
+    }
+
+    public Map<Boolean, Dish> mostCaloricPartitionedByVegetarian(List<Dish> menu) {
+        return menu.stream().collect(Collectors.partitioningBy(Dish::isVegetarian,
+                Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparingInt(Dish::getCalories)), Optional::get))
+        );
+    }
 }
