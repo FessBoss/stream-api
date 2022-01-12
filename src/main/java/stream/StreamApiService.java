@@ -391,4 +391,53 @@ public class StreamApiService {
                 Collectors.flatMapping(dish -> dishTags.get(dish.getName()).stream(),
                         Collectors.toSet())));
     }
+
+    /**
+     * многоуровневая группировка
+     */
+    public Map<Dish.Type, Map<CaloricLevel, List<Dish>>> dishesByTypeCaloricLevel(List<Dish> menu) {
+        return menu.stream().collect(Collectors.groupingBy(Dish::getType,
+                Collectors.groupingBy(dish -> {
+                    if (dish.getCalories() <= 400) return CaloricLevel.DIET;
+                    else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
+                    else return CaloricLevel.FAT;
+                }))
+        );
+    }
+
+    /**
+     * В общем случае можно передавать в первый groupingBy коллектор
+     * произвольного типа, а не только еще один groupingBy. Например, можно подсчитать
+     * число блюд в меню для каждого из типов блюд, передав коллектор counting в качестве второго аргумента в коллектор groupingBy
+     */
+    public Map<Dish.Type, Long> typesCount(List<Dish> menu) {
+        return menu.stream().collect(Collectors.groupingBy(Dish::getType, Collectors.counting()));
+    }
+
+    /**
+     * Преобразование результатов работы коллектора к другому типу
+     */
+    public Map<Dish.Type, Dish> mostCaloricByType(List<Dish> menu) {
+        return menu.stream().collect(Collectors.groupingBy(Dish::getType,
+                Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparingInt(Dish::getCalories)), Optional::get))
+        );
+    }
+
+    /**
+     * Кроме того, в сочетании с groupingBy часто применяется коллектор, генерируемый методом mapping.
+     * Этот метод принимает два аргумента: функцию преобразования
+     * элементов потока и еще один коллектор, служащий для накопления полученных в результате такого преобразования объектов.
+     * Он выступает в качестве адаптера между коллектором, принимающим объекты одного типа, и коллектором, работающим с
+     * объектами другого типа, за счет того, что перед попаданием в накопитель к каждому из входящих элементов применяется функция отображения.
+     * В данном случае передаваемая в метод mapping преобразующая функция
+     */
+    public Map<Dish.Type, Set<CaloricLevel>> caloricLevelsByType(List<Dish> menu) {
+        return menu.stream().collect(Collectors.groupingBy(Dish::getType,
+                Collectors.mapping(dish -> {
+                    if (dish.getCalories() <= 400) return CaloricLevel.DIET;
+                    else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
+                    else return CaloricLevel.FAT;
+                }, Collectors.toSet()))
+        );
+    }
 }
